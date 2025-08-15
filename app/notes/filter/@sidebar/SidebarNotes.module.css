@@ -44,6 +44,16 @@
   color: #ddd;
 }
 
+/* Додаю окремий клас active для CSS Modules */
+.active {
+  background-color: #555;
+  color: white;
+}
+
+.active:hover {
+  color: #ddd;
+}
+
 /* Адаптивність для менших екранів */
 @media (max-width: 768px) {
   .sidebar {

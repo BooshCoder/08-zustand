@@ -1,5 +1,46 @@
+import type { Metadata } from 'next'
 import NotesClient from "./Notes.client";
 import { fetchNotesServer } from "../../../../lib/api";
+
+export async function generateMetadata({ 
+  params, 
+  searchParams 
+}: {
+  params: Promise<{ slug: string[] }>;
+  searchParams: Promise<{ page?: string; search?: string }>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const tag = resolvedParams.slug[0] || "All";
+  const page = resolvedSearchParams.page || "1";
+  const search = resolvedSearchParams.search || "";
+
+  const title = tag === "All" 
+    ? "Всі нотатки | NoteHub"
+    : `${tag} нотатки | NoteHub`;
+    
+  const description = tag === "All"
+    ? "Переглядайте всі ваші нотатки з можливістю пошуку та фільтрації"
+    : `Переглядайте нотатки з категорії "${tag}" з можливістю пошуку та фільтрації`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://08-zustand-gilt.vercel.app/notes/filter/${tag}`,
+      images: [
+        {
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+  };
+}
 
 interface NotesPageProps {
   params: Promise<{

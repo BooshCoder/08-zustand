@@ -1,6 +1,7 @@
-import React from 'react';
+"use client";
+
 import Link from 'next/link';
-import { headers } from 'next/headers';
+import { usePathname } from 'next/navigation';
 import css from './SidebarNotes.module.css';
 
 const tags = [
@@ -12,11 +13,8 @@ const tags = [
   { name: 'Shopping', slug: 'Shopping' },
 ];
 
-export default async function SidebarNotes() {
-  const headersList = await headers();
-  const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || '';
-  
-  // Визначаємо активний тег на основі поточного шляху
+export default function SidebarNotes() {
+  const pathname = usePathname() || '';
   const currentTag = pathname.includes('/notes/filter/') 
     ? pathname.split('/notes/filter/')[1] 
     : 'All';

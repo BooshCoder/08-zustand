@@ -6,9 +6,8 @@ import { fetchNotes, FetchNotesResponse } from "../../../../lib/api";
 import NoteList from "../../../../components/NoteList/NoteList";
 import SearchBox from "../../../../components/SearchBox/SearchBox";
 import Pagination from "../../../../components/Pagination/Pagination";
-import Modal from "../../../../components/Modal/Modal";
-import NoteForm from "../../../../components/NoteForm/NoteForm";
 import styles from "./NotesPage.module.css";
+import Link from "next/link";
 
 interface NotesClientProps {
   tag: string;
@@ -19,7 +18,6 @@ export default function NotesClient({ tag, initialData }: NotesClientProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Скидаємо сторінку одразу при зміні пошуку
   const handleSearch = (value: string) => {
@@ -41,13 +39,12 @@ export default function NotesClient({ tag, initialData }: NotesClientProps) {
     queryFn: () => fetchNotes(page, 12, debouncedSearch, tag === "All" ? undefined : tag),
     retry: 3,
     retryDelay: 1000,
-    initialData: initialData,
+    initialData:
+      page === 1 && debouncedSearch === "" && (tag === "All" || tag === undefined)
+        ? initialData
+        : undefined,
     placeholderData: (previousData) => previousData,
   });
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <div className={styles.container}>
@@ -58,12 +55,9 @@ export default function NotesClient({ tag, initialData }: NotesClientProps) {
           setPage={setPage}
           pageCount={data?.totalPages || 1}
         />
-        <button
-          className={styles.createButton}
-          onClick={() => setIsModalOpen(true)}
-        >
+        <Link href="/notes/action/create" className={styles.createButton}>
           Create note +
-        </button>
+        </Link>
       </header>
 
       {isLoading && (
@@ -80,15 +74,6 @@ export default function NotesClient({ tag, initialData }: NotesClientProps) {
 
       {!isLoading && !isError && data && (
         <NoteList notes={data.notes || []} />
-      )}
-
-      {isModalOpen && (
-        <Modal onClose={handleCloseModal}>
-          <NoteForm
-            onSuccess={handleCloseModal}
-            onCancel={handleCloseModal}
-          />
-        </Modal>
       )}
     </div>
   );
