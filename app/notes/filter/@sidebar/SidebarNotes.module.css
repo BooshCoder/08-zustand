@@ -27,12 +27,17 @@
   font-size: 0.9rem;
   display: block;
   padding: 0.4rem 0.8rem;
-  transition: color 0.3s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease;
   border-radius: 4px;
 }
 
 .menuLink:hover {
-  color: #ddd;
+  color: #fff;
+  background-color: #444;
+  transform: translateY(-1px);
 }
 
 .menuLink.active {
@@ -41,7 +46,8 @@
 }
 
 .menuLink.active:hover {
-  color: #ddd;
+  color: #fff;
+  background-color: #4a4a4a;
 }
 
 /* Додаю окремий клас active для CSS Modules */
@@ -51,7 +57,8 @@
 }
 
 .active:hover {
-  color: #ddd;
+  color: #fff;
+  background-color: #4a4a4a;
 }
 
 /* Адаптивність для менших екранів */

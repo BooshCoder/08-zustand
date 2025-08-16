@@ -3,17 +3,12 @@ import NotesClient from "./Notes.client";
 import { fetchNotesServer } from "../../../../lib/api";
 
 export async function generateMetadata({ 
-  params, 
-  searchParams 
+  params
 }: {
   params: Promise<{ slug: string[] }>;
-  searchParams: Promise<{ page?: string; search?: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
   const tag = resolvedParams.slug[0] || "All";
-  const page = resolvedSearchParams.page || "1";
-  const search = resolvedSearchParams.search || "";
 
   const title = tag === "All" 
     ? "Всі нотатки | NoteHub"
